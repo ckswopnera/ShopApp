@@ -4,4 +4,6 @@ export const useshopApp = create((set) => ({
   token: [],
   removeAllBears: () => set({ token: [] }),
   updateToken: token => set({ token }),
+  searchBar:false,
+  updateSearchBar:searchBar=>set({searchBar}),
 }))

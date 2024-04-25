@@ -179,7 +179,9 @@ export default function LoginScreen() {
                                 <Ionicons name={secureTextEntry === true ? 'eye-off-outline' : 'eye-outline'}
                                     style={styles.eye}
                                     color={'#000'}
-                                    size={26} />
+                                    size={26} 
+                                    
+                                    />
                             </TouchableOpacity>
 
                         </Animatable.View>

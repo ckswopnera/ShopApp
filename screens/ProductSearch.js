@@ -8,6 +8,7 @@ import { emoji } from '../util/emoji';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { DialogBox_warning } from '../util/alert';
+import { useshopApp } from '../store/store';
 
 export default function ProductSearch() {
     const [data, setData] = useState();
@@ -15,6 +16,7 @@ export default function ProductSearch() {
     const [isLoading, setIsLoading] = useState(true)
     const [searchText, setSearchText] = useState('')
     const navigation = useNavigation()
+    const searchBar = useshopApp(state => state.searchBar);
 
     const GetProductList = async () => {
         try {
@@ -25,19 +27,13 @@ export default function ProductSearch() {
             setIsLoading(false)
         }
         catch (err) {
-            DialogBox_warning(err,'')
+            DialogBox_warning(err, '')
 
         }
     }
 
     const handleOnChangeText = async (text) => {
-        // console.log(text);
-        // setSpinnerVisibility(true);
-        // setSearchText(text);
-
-        // setTimeout(() => {
-        //     setSpinnerVisibility(false);
-        // }, 1000);
+        // console.log(text)
         try {
             setSpinnerVisibility(true);
             setSearchText(text);
@@ -51,7 +47,7 @@ export default function ProductSearch() {
             }, 1000);
         }
         catch (err) {
-            DialogBox_warning(err,'')
+            DialogBox_warning(err, '')
 
         }
     }
@@ -62,32 +58,35 @@ export default function ProductSearch() {
 
     return (
         <>
-            <SearchBar
-                height={50}
-                fontSize={18}
-                shadowColor="#282828"
-                //   backgroundColor="#990099"
-                spinnerVisibility={spinnerVisibility}
-                spinnerColor='#fff'
-                spinnerSize={22}
-                placeholder="Search any product ..."
-                placeholderTextColor='#fff'
-                shadowStyle={styles.searchBarShadowStyle}
-                searchIconComponent={<Ionicons name='search' color='#fff' size={22} />}
-                clearIconComponent={<Entypo name='cross' color='#fff' size={22} />}
-                textInputStyle={{
-                    color: '#fff',
-                    cursorColor: '#fff'
-                }}
-                style={{
-                    backgroundColor: '#990099',
-                    paddingVertical: 10,
-                    marginTop: 10,
-                    marginBottom: 6,
-                }}
-                onChangeText={handleOnChangeText}
-                onClearPress={GetProductList}
-            />
+            {searchBar &&
+                <SearchBar
+                    height={50}
+                    fontSize={18}
+                    shadowColor="#282828"
+                    //   backgroundColor="#990099"
+                    spinnerVisibility={spinnerVisibility}
+                    spinnerColor='#fff'
+                    spinnerSize={22}
+                    placeholder="Search any product ..."
+                    placeholderTextColor='#fff'
+                    shadowStyle={styles.searchBarShadowStyle}
+                    searchIconComponent={<Ionicons name='search' color='#fff' size={22} />}
+                    clearIconComponent={<Entypo name='cross' color='#fff' size={22} />}
+                    textInputStyle={{
+                        color: '#fff',
+                        cursorColor: '#fff'
+                    }}
+                    style={{
+                        backgroundColor: '#990099',
+                        paddingVertical: 10,
+                        marginTop: 10,
+                        marginBottom: 6,
+                    }}
+                    onChangeText={handleOnChangeText}
+                    // onEndEditing={handleOnChangeText}
+                    onClearPress={GetProductList}
+
+                />}
             <FlatList
                 // style={{
                 //     paddingHorizontal:14
@@ -153,7 +152,7 @@ export default function ProductSearch() {
                                 // bottom:0
                             }}>
                                 <TouchableOpacity
-                                onPress={() => navigation.navigate('Edit', { data: item.id })}
+                                    onPress={() => navigation.navigate('Edit', { data: item.id })}
                                     style={{
                                         backgroundColor: "#990099",
                                         paddingVertical: 4,
