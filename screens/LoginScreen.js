@@ -14,7 +14,7 @@ export default function LoginScreen() {
     const [secureTextEntry, setsecureTextEntry] = useState(true);
     const [loginData, setLoginData] = useState([]);
     const navigation = useNavigation();
-  
+
     const updateToken = useshopApp(state => state.updateToken);
 
     const loginDatam = {
@@ -41,12 +41,12 @@ export default function LoginScreen() {
             .then(response => {
                 // console.log({response})
                 if (!response.ok) {
-                    DialogBox_danger('Invalid credentials','')
+                    DialogBox_danger('Invalid credentials', '')
                 }
                 return response.json();
             })
             .then(data => {
-                console.log( {data});
+                console.log({ data });
                 updateToken(data)
                 navigation.reset({
                     index: 0,
@@ -275,7 +275,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 10,
         width: '80%',
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 40,
     },
     eye: {
         height: 25,
