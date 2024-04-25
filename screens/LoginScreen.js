@@ -68,7 +68,9 @@ export default function LoginScreen() {
                 styles.container
             }
         >
-            <Text
+            <Animatable.Text
+            delay={1000}
+            animation={'bounceIn'}
                 style={[
                     styles.headerText,
                     {
@@ -76,7 +78,7 @@ export default function LoginScreen() {
                     },
                 ]}>
                 Hello!
-            </Text>
+            </Animatable.Text>
             <Text
                 style={[
                     styles.headerText,

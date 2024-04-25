@@ -6,6 +6,7 @@ import { DialogBox_success } from '../util/alert';
 import { emoji } from '../util/emoji';
 import { useshopApp } from '../store/store';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 export default function ProfileScreen() {
     const [isLoading, setisLoading] = useState(true)
@@ -46,6 +47,9 @@ export default function ProfileScreen() {
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
+                <Animatable.View 
+                 delay={1000}
+                 animation={'bounceIn'}>
                 <FastImage
                     style={styles.image}
                     source={{
@@ -55,7 +59,7 @@ export default function ProfileScreen() {
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                 />
-
+</Animatable.View>
                 <View style={{
                     paddingHorizontal: 4,
                     width: '100%',
