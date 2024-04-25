@@ -7,12 +7,15 @@ import * as Animatable from 'react-native-animatable';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { DialogBox_danger } from '../util/alert';
+import { useshopApp } from '../store/store';
 
 
 export default function LoginScreen() {
     const [secureTextEntry, setsecureTextEntry] = useState(true);
     const [loginData, setLoginData] = useState([]);
     const navigation = useNavigation();
+  
+    const updateToken = useshopApp(state => state.updateToken);
 
     const loginDatam = {
         username: 'kminchelle',
@@ -36,14 +39,15 @@ export default function LoginScreen() {
             body: JSON.stringify(loginData)
         })
             .then(response => {
+                // console.log({response})
                 if (!response.ok) {
-                    DialogBox_danger('Netword request failed','')
+                    DialogBox_danger('Invalid credentials','')
                 }
                 return response.json();
             })
             .then(data => {
-                console.log({ data });
-                // navigation.navigate('MainStack')
+                console.log( {data});
+                updateToken(data)
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'MainStack' }],

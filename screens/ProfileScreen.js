@@ -1,19 +1,26 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import FastImage from 'react-native-fast-image';
 import { windowWidth } from '../util/function';
 import { DialogBox_success } from '../util/alert';
 import { emoji } from '../util/emoji';
+import { useshopApp } from '../store/store';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileScreen() {
+    const [isLoading, setisLoading] = useState(true)
+    const token = useshopApp(state => state.token);
+    const removeAllBears = useshopApp(state => state.removeAllBears)
     const [data, setData] = useState([])
+    const navigation = useNavigation();
 
-    const fetchUserDetails = async (token) => {
+    const fetchUserDetails = async () => {
         try {
+            setisLoading(true)
             const response = await fetch('https://dummyjson.com/auth/me', {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsInVzZXJuYW1lIjoia21pbmNoZWxsZSIsImVtYWlsIjoia21pbmNoZWxsZUBxcS5jb20iLCJmaXJzdE5hbWUiOiJKZWFubmUiLCJsYXN0TmFtZSI6IkhhbHZvcnNvbiIsImdlbmRlciI6ImZlbWFsZSIsImltYWdlIjoiaHR0cHM6Ly9yb2JvaGFzaC5vcmcvSmVhbm5lLnBuZz9zZXQ9c2V0NCIsImlhdCI6MTcxNDAwMzA0MCwiZXhwIjoxNzE0MDA2NjQwfQ.htFw8mNTVwLIAiKPKw8Jx2OF0KeGoJjwM7XVxnEB2Ko`,
+                    Authorization: `Bearer ${token?.token}`,
                 },
             });
             if (!response.ok) {
@@ -21,240 +28,252 @@ export default function ProfileScreen() {
             }
             const userData = await response.json();
             console.log('User details:', userData);
-            setData(userData)
+            setData(userData);
+            setisLoading(false)
         } catch (error) {
             console.error('Error fetching user details:', error);
         }
     };
 
     useEffect(() => {
+        console.log({ token })
         fetchUserDetails();
     }, [])
 
     return (
-        <ScrollView contentContainerStyle={{
-            alignItems: 'center',
-            justifyContent: 'center'
-        }}>
-            <FastImage
-                style={styles.image}
-                source={{
-                    uri: data?.image,
-                    headers: { Authorization: 'someAuthToken' },
-                    priority: FastImage.priority.high,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-            />
-
-            <View style={{
-                paddingHorizontal: 4,
-                width: '100%',
-                marginTop: 10,
-                // flex: 1,
-
+        <>{isLoading === true ? <ActivityIndicator size={28} color={'#990099'} style={{ marginTop: windowWidth }} /> :
+            <ScrollView contentContainerStyle={{
+                alignItems: 'center',
+                justifyContent: 'center'
             }}>
+                <FastImage
+                    style={styles.image}
+                    source={{
+                        uri: data?.image,
+                        headers: { Authorization: 'someAuthToken' },
+                        priority: FastImage.priority.high,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
+
                 <View style={{
-                    padding: 12,
-                    borderWidth: 2,
-                    borderColor: '#990099',
-                    borderTopRightRadius: 8,
-                    borderTopLeftRadius: 8,
-                    // height: windowWidth,
-                    marginBottom: 4,
+                    paddingHorizontal: 4,
+                    width: '100%',
+                    marginTop: 10,
+                    // flex: 1,
 
                 }}>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            Name:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.firstName} {data?.lastName}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            Address:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.address?.address}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            postalCode:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.address?.postalCode}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            state:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.address?.state}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            birthDate:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.birthDate}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            Age:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.age}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            gender:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.gender}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            phone:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.phone}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            weight:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.weight}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            university:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.university}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            email:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.email}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            company:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.company?.name}
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                        <Text style={styles.textHeader}>
-                            designation:
-                        </Text>
-                        <Text style={{
-                            fontSize: 18,
-                            color: '#333',
-                            textAlign: 'center',
-                            // fontWeight:'bold',
-                        }}>
-                            {data?.company?.title}
-                        </Text>
+                    <View style={{
+                        padding: 12,
+                        borderWidth: 2,
+                        borderColor: '#990099',
+                        borderTopRightRadius: 8,
+                        borderTopLeftRadius: 8,
+                        // height: windowWidth,
+                        marginBottom: 4,
+
+                    }}>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                Name:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.firstName} {data?.lastName}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                Address:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.address?.address}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                postalCode:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.address?.postalCode}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                state:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.address?.state}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                birthDate:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.birthDate}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                Age:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.age}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                gender:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.gender}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                phone:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.phone}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                weight:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.weight}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                university:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.university}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                email:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.email}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                company:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.company?.name}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                            <Text style={styles.textHeader}>
+                                designation:
+                            </Text>
+                            <Text style={{
+                                fontSize: 18,
+                                color: '#333',
+                                textAlign: 'center',
+                                // fontWeight:'bold',
+                            }}>
+                                {data?.company?.title}
+                            </Text>
+                        </View>
                     </View>
                 </View>
-            </View>
 
-            <TouchableOpacity 
-            onPress={()=>DialogBox_success(`Successfully logout ${emoji.smile_emoji}`,'')}
-            style={{
-                backgroundColor: '#990099',
-                width: '80%',
-                borderRadius: 10,
-                // alignSelf: 'center',
-                paddingVertical: 12,
-                marginTop: 20,
-            }}>
-                <Text style={{
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    fontSize: 22,
-                    color: '#fff',
+                <TouchableOpacity
 
-                }}>SignOut</Text>
+                    onPress={() => {
+                        removeAllBears()
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Login' }],
+                        });
+                        DialogBox_success(`Successfully logout ${emoji.smile_emoji}`, '')
+                    }}
+                    style={{
+                        backgroundColor: '#990099',
+                        width: '80%',
+                        borderRadius: 10,
+                        // alignSelf: 'center',
+                        paddingVertical: 12,
+                        marginTop: 20,
+                    }}>
+                    <Text style={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: 22,
+                        color: '#fff',
 
-            </TouchableOpacity>
-        </ScrollView>
+                    }}>SignOut</Text>
+
+                </TouchableOpacity>
+            </ScrollView>
+        }</>
     )
 }
 
