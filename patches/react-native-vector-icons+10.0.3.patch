@@ -1,0 +1,69 @@
+diff --git a/node_modules/react-native-vector-icons/android/.project b/node_modules/react-native-vector-icons/android/.project
+new file mode 100644
+index 0000000..6b434fb
+--- /dev/null
++++ b/node_modules/react-native-vector-icons/android/.project
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>react-native-vector-icons</name>
++	<comment>Project react-native-vector-icons created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++</projectDescription>
+diff --git a/node_modules/react-native-vector-icons/android/bin/src/main/java/com/oblador/vectoricons/VectorIconsModuleImpl.class b/node_modules/react-native-vector-icons/android/bin/src/main/java/com/oblador/vectoricons/VectorIconsModuleImpl.class
+new file mode 100644
+index 0000000..2a5207e
+Binary files /dev/null and b/node_modules/react-native-vector-icons/android/bin/src/main/java/com/oblador/vectoricons/VectorIconsModuleImpl.class differ
+diff --git a/node_modules/react-native-vector-icons/android/bin/src/main/java/com/oblador/vectoricons/VectorIconsPackage.class b/node_modules/react-native-vector-icons/android/bin/src/main/java/com/oblador/vectoricons/VectorIconsPackage.class
+new file mode 100644
+index 0000000..79146ea
+Binary files /dev/null and b/node_modules/react-native-vector-icons/android/bin/src/main/java/com/oblador/vectoricons/VectorIconsPackage.class differ
+diff --git a/node_modules/react-native-vector-icons/android/bin/src/newarch/java/com/oblador/vectoricons/VectorIconsModule$Errors.class b/node_modules/react-native-vector-icons/android/bin/src/newarch/java/com/oblador/vectoricons/VectorIconsModule$Errors.class
+new file mode 100644
+index 0000000..212fbc1
+Binary files /dev/null and b/node_modules/react-native-vector-icons/android/bin/src/newarch/java/com/oblador/vectoricons/VectorIconsModule$Errors.class differ
+diff --git a/node_modules/react-native-vector-icons/android/bin/src/newarch/java/com/oblador/vectoricons/VectorIconsModule.class b/node_modules/react-native-vector-icons/android/bin/src/newarch/java/com/oblador/vectoricons/VectorIconsModule.class
+new file mode 100644
+index 0000000..0664dfb
+Binary files /dev/null and b/node_modules/react-native-vector-icons/android/bin/src/newarch/java/com/oblador/vectoricons/VectorIconsModule.class differ
+diff --git a/node_modules/react-native-vector-icons/android/bin/src/oldarch/java/com/oblador/vectoricons/VectorIconsModule$Errors.class b/node_modules/react-native-vector-icons/android/bin/src/oldarch/java/com/oblador/vectoricons/VectorIconsModule$Errors.class
+new file mode 100644
+index 0000000..0e47952
+Binary files /dev/null and b/node_modules/react-native-vector-icons/android/bin/src/oldarch/java/com/oblador/vectoricons/VectorIconsModule$Errors.class differ
+diff --git a/node_modules/react-native-vector-icons/android/bin/src/oldarch/java/com/oblador/vectoricons/VectorIconsModule.class b/node_modules/react-native-vector-icons/android/bin/src/oldarch/java/com/oblador/vectoricons/VectorIconsModule.class
+new file mode 100644
+index 0000000..77e02f1
+Binary files /dev/null and b/node_modules/react-native-vector-icons/android/bin/src/oldarch/java/com/oblador/vectoricons/VectorIconsModule.class differ
+diff --git a/node_modules/react-native-vector-icons/fonts.gradle b/node_modules/react-native-vector-icons/fonts.gradle
+index 951394b..ea782fb 100644
+--- a/node_modules/react-native-vector-icons/fonts.gradle
++++ b/node_modules/react-native-vector-icons/fonts.gradle
+@@ -31,7 +31,10 @@ afterEvaluate {
+         if (lintVitalAnalyzeTask) {
+         lintVitalAnalyzeTask.dependsOn(fontCopyTask)
+         }
+-      
++        def generateReportTask = tasks.findByName("generate${targetName}LintVitalReportModel")
++        if (generateReportTask) {
++            generateReportTask.dependsOn(fontCopyTask)
++        }
+         def generateAssetsTask = tasks.findByName("generate${targetName}Assets")
+         generateAssetsTask.dependsOn(fontCopyTask)
+       }
